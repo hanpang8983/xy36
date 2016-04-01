@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shxt.mapper.UserMapper">
+    <!-- 下面的代码只是针对于结果集的映射,针对于查询后的处理 -->
+    <resultMap type="com.shxt.model.User" id="BaseResultMapper">
+        <!--对主键的映射 -->
+        <id property="user_id" javaType="java.lang.Integer" 
+            column="user_id" jdbcType="INTEGER"
+        />
+        <result property="account" javaType="java.lang.String" 
+                column="account" jdbcType="VARCHAR"
+        />
+        <result property="password" javaType="java.lang.String" 
+                column="password" jdbcType="VARCHAR"
+        />
+        <result property="user_name" javaType="java.lang.String" 
+                column="user_name" jdbcType="VARCHAR"
+        />
+        <result property="status" javaType="java.lang.String" 
+                column="status" jdbcType="VARCHAR"
+        />
+    </resultMap>
+    
+    <select id="login" resultMap="BaseResultMapper">
+    select * from sys_user where account=#{param1} and password=#{param2}
+    </select>
+    
+    
+</mapper>

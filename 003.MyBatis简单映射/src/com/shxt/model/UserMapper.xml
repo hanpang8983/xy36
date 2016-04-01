@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shxt.mapper.UserMapper">
+    <!-- 下面的代码只是针对于结果集的映射,针对于查询后的处理 -->
+    <resultMap type="com.shxt.model.User" id="BaseResultMapper">
+        <!--对主键的映射 -->
+        <id property="userId" javaType="java.lang.Integer" 
+            column="user_id" jdbcType="INTEGER"
+        />
+        <result property="account" javaType="java.lang.String" 
+                column="account" jdbcType="VARCHAR"
+        />
+        <result property="pwd" javaType="java.lang.String" 
+                column="password" jdbcType="VARCHAR"
+        />
+        <result property="userName" javaType="java.lang.String" 
+                column="user_name" jdbcType="VARCHAR"
+        />
+        <result property="status" javaType="java.lang.String" 
+                column="status" jdbcType="VARCHAR"
+        />
+        <result property="date1" javaType="java.util.Date"
+                column="date1" jdbcType="VARCHAR"
+                typeHandler="com.shxt.type.MyDateTypeHandler"
+        />
+         <result property="date2" javaType="java.util.Date"
+                column="date2" jdbcType="VARCHAR"
+                typeHandler="com.shxt.type.MyDateTypeHandler"
+        />
+       
+    </resultMap>
+    <resultMap type="com.shxt.model.User" id="simpleUserMapper" 
+    extends="BaseResultMapper">
+         <result property="mydate1" javaType="java.lang.Long"
+                column="mydate" />
+         <result property="days" javaType="java.lang.String"
+            column="mydate" 
+            typeHandler="com.shxt.type.MyDaysTypeHandler"
+         />
+    </resultMap>
+
+   
+   <!-- 通过主键获取对象信息 -->
+   <select id="load01" parameterType="int" resultType="com.shxt.model.User">
+    select * from sys_user where user_id=#{user_id}
+   </select>
+   
+   <insert id="add" parameterType="com.shxt.model.User">
+    insert into sys_user
+    (account,password,user_name,date1)
+    values
+    (#{account},#{pwd},#{userName},
+    #{date1,typeHandler=com.shxt.type.MyDateTypeHandler})
+   </insert>
+   
+   
+   <select id="load02" parameterType="int" resultMap="BaseResultMapper">
+    select * from sys_user where user_id=#{user_id}
+   </select>
+   
+   <select id="load03" parameterType="int" resultMap="simpleUserMapper">
+    select 
+        user_id,
+        account,
+        password,
+        user_name,
+        status,
+        date1,
+        date2,
+        date1-date2 mydate
+    from sys_user
+    where 
+        user_id=#{user_id}
+   </select>
+    
+</mapper>

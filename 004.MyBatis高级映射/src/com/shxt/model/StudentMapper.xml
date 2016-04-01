@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shxt.mapper.StudentMapper">
+    <!-- 基础映射只是映射表中的字段 -->
+    <resultMap type="com.shxt.model.Student" id="BaseResultMap">
+        <id property="student_id" column="student_id" />
+        <result property="student_name" column="student_name" />
+        <result property="fk_class_id" column="fk_class_id" />
+    </resultMap>
+    <resultMap type="com.shxt.model.Student" id="StudentMap" 
+    extends="BaseResultMap">
+         <association property="clazz"
+            column="fk_class_id"
+            select="com.shxt.mapper.ClazzMapper.load"
+         ></association>
+    </resultMap>
+    
+    <resultMap type="com.shxt.model.Student" id="StudentResultMap"  extends="BaseResultMap">
+        <association property="clazz" column="fk_class_id" resultMap="com.shxt.mapper.ClazzMapper.BaseResultMap"/>
+    </resultMap>
+    <select id="load01" parameterType="int" resultMap="StudentResultMap">
+        select s.student_id,s.student_name,s.fk_class_id,c.class_id,c.class_name
+        from student s
+        left join class c
+        on s.fk_class_id=c.class_id
+        where 
+            s.student_id =#{id}
+    </select>
+
+    <!-- 题目: student_id:2 通过主键获取学生信息
+        获取该学生对应的班级和ID
+     -->
+    <select id="load" parameterType="int" resultMap="StudentMap">
+        <!-- select * from student where student_id=#{id}  -->
+        select s.student_id,s.student_name,s.fk_class_id
+        from
+            student s
+        where 
+           
+            s.student_id =#{id}
+    </select>
+    
+    <select id="list"  resultMap="StudentMap">
+        <!-- select * from student where student_id=#{id}  -->
+        select s.student_id,s.student_name,s.fk_class_id
+        from
+            student s
+       
+    </select>
+    
+   
+
+</mapper>

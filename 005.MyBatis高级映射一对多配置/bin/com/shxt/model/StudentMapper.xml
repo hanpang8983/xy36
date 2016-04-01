@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shxt.mapper.StudentMapper">
+    <!-- 基础映射只是映射表中的字段 -->
+    <resultMap type="com.shxt.model.Student" id="BaseResultMap">
+        <id property="student_id" column="student_id" />
+        <result property="student_name" column="student_name" />
+        <result property="fk_class_id" column="fk_class_id" />
+    </resultMap>
+    
+    <select id="load" parameterType="int" resultMap="BaseResultMap">
+        select * from student where student_id=#{id}
+    </select>
+    
+    <select id="listStudentByClassId" 
+            parameterType="int" 
+            resultMap="BaseResultMap">
+        select student_id,student_name,fk_class_id
+        from student
+        where fk_class_id=#{class_id}
+    
+    </select>
+    
+    <resultMap type="com.shxt.model.Student" id="resutl01Map" extends="BaseResultMap">
+        <collection property="courseList" ofType="com.shxt.model.Course"
+        resultMap="com.shxt.mapper.CourseMapper.BaseResultMap"
+        />
+    </resultMap>
+    
+    <select id="m2m01" parameterType="int" resultMap="resutl01Map">
+         select s.student_id,s.student_name,s.fk_class_id,c.course_id,c.course_name from student s 
+         LEFT JOIN student_link_course slc on s.student_id=slc.fk_student_id
+         LEFT JOIN course c on slc.fk_course_id=c.course_id
+         where s.student_id=#{student_id}
+    
+    </select>
+    
+    <insert id="add01" parameterType="com.shxt.model.Student">
+        insert into student_link_course
+        (fk_student_id,fk_course_id)
+       <foreach collection="courseList" item="course" open="values" separator=",">
+        (#{student_id},#{course.course_id})
+       
+       </foreach>
+    </insert>
+    
+    <!-- 
+    int i =5;
+    
+    int sum = i+(i+(i+(++i)));
+    
+     -->
+   
+   
+
+</mapper>
